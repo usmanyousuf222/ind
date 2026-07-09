@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>I LOVE YOU KINZA - Heart Text Art</title>
+  <style>
+    :root {
+      --bg: #070209;
+      --pink: #ff4f93;
+      --rose: #ff1e5d;
+      --red: #c70a35;
+      --gold: #ffd88a;
+      --glass: rgba(255, 255, 255, .08);
+      --line: rgba(255, 255, 255, .16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255, 43, 103, .28), transparent 25%),
+        radial-gradient(circle at 18% 20%, rgba(255, 116, 169, .18), transparent 30%),
+        radial-gradient(circle at 82% 78%, rgba(149, 0, 48, .35), transparent 28%),
+        linear-gradient(145deg, #050107 0%, #16030f 48%, #06010a 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, .5) 0 1px, transparent 2px) 0 0 / 82px 82px,
+        radial-gradient(circle, rgba(255, 151, 187, .36) 0 1px, transparent 2px) 38px 52px / 116px 116px;
+      opacity: .42;
+      animation: starDrift 28s linear infinite;
+    }
+
+    body::after {
+      background:
+        linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, .07) 48%, transparent 72%),
+        radial-gradient(circle at 50% 50%, transparent 0 38%, rgba(0, 0, 0, .58) 78%);
+      mix-blend-mode: screen;
+      animation: cinematicSweep 8s ease-in-out infinite alternate;
+    }
+
+    .scene {
+      position: relative;
+      isolation: isolate;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .aura {
+      position: absolute;
+      inset: 8%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(255, 42, 101, .36), transparent 38%),
+        radial-gradient(circle at 50% 52%, rgba(255, 216, 138, .1), transparent 58%);
+      filter: blur(28px);
+      opacity: .82;
+      animation: auraPulse 3.2s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .particles {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      left: var(--x);
+      top: 105%;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 14px rgba(255, 216, 138, .9), 0 0 34px rgba(255, 48, 111, .58);
+      opacity: .82;
+      animation: floatSpark var(--duration) linear infinite;
+      animation-delay: var(--delay);
+    }
+
+    .heart-field {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .heart-dot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: grid;
+      place-items: center;
+      width: var(--heart-size);
+      height: var(--heart-size);
+      font-size: var(--heart-size);
+      line-height: 1;
+      will-change: transform, opacity, filter;
+      transform: translate3d(-100px, -100px, 0);
+      filter:
+        drop-shadow(0 0 4px rgba(255, 60, 117, .95))
+        drop-shadow(0 0 13px rgba(255, 26, 86, .62));
+      user-select: none;
+    }
+
+    .glass-note {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 8;
+      width: min(520px, calc(100% - 32px));
+      transform: translateX(-50%);
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: rgba(255, 241, 246, .86);
+      background: var(--glass);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .34);
+      backdrop-filter: blur(18px);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      color: rgba(255, 240, 246, .9);
+      background: rgba(7, 2, 9, .8);
+      transition: opacity .5s ease, visibility .5s ease;
+    }
+
+    .loading.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loading span {
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      box-shadow: 0 0 34px rgba(255, 52, 112, .28);
+      backdrop-filter: blur(14px);
+      font-weight: 800;
+    }
+
+    @keyframes starDrift {
+      to {
+        transform: translate3d(-95px, -130px, 0);
+      }
+    }
+
+    @keyframes cinematicSweep {
+      from {
+        opacity: .55;
+        transform: scale(1);
+      }
+      to {
+        opacity: .9;
+        transform: scale(1.04);
+      }
+    }
+
+    @keyframes auraPulse {
+      0%, 100% {
+        transform: scale(.96);
+        opacity: .72;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    @keyframes floatSpark {
+      from {
+        transform: translate3d(0, 0, 0) scale(.7);
+        opacity: 0;
+      }
+      18%, 80% {
+        opacity: .82;
+      }
+      to {
+        transform: translate3d(var(--drift), -118vh, 0) scale(1.25);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .glass-note {
+        bottom: 14px;
+        border-radius: 22px;
+        font-size: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene" aria-label="Animated heart emojis forming the words I LOVE YOU KINZA">
+    <div class="aura" aria-hidden="true"></div>
+    <div class="particles" id="particles" aria-hidden="true"></div>
+    <div class="heart-field" id="heartField" aria-label="Heart emoji text art spelling I LOVE YOU KINZA"></div>
+    <p class="glass-note">Hundreds of tiny hearts gather, pulse, scatter, and reform into “I LOVE YOU KINZA”.</p>
+  </main>
+
+  <div class="loading" id="loading"><span>Preparing hearts ❤️</span></div>
+
+  <script>
+    const TEXT_LINES = ["I LOVE YOU", "KINZA"];
+    const HEART = "❤️";
+    const field = document.querySelector("#heartField");
+    const loading = document.querySelector("#loading");
+    const particles = document.querySelector("#particles");
+
+    let hearts = [];
+    let targets = [];
+    let randomA = [];
+    let randomB = [];
+    let cycleStart = performance.now();
+    let resizeTimer;
+
+    const phases = {
+      scatterA: 1200,
+      gather: 3300,
+      hold: 2600,
+      scatter: 2600,
+      reform: 3300,
+      pulseHold: 2200
+    };
+
+    const totalCycle = Object.values(phases).reduce((sum, value) => sum + value, 0);
+
+    // Easing keeps the movement romantic and graceful instead of mechanical.
+    function easeInOutCubic(t) {
+      return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function makeRandomPoint(width, height) {
+      return {
+        x: rand(-width * .12, width * 1.12),
+        y: rand(-height * .12, height * 1.12),
+        r: rand(-70, 70),
+        s: rand(.55, 1.35),
+        o: rand(.28, .9)
+      };
+    }
+
+    function createBackgroundParticles() {
+      particles.innerHTML = "";
+      const count = Math.min(90, Math.max(38, Math.floor(window.innerWidth / 16)));
+
+      for (let i = 0; i < count; i += 1) {
+        const particle = document.createElement("span");
+        particle.className = "particle";
+        particle.style.setProperty("--x", `${Math.random() * 100}%`);
+        particle.style.setProperty("--size", `${rand(2, 5)}px`);
+        particle.style.setProperty("--drift", `${rand(-90, 90)}px`);
+        particle.style.setProperty("--duration", `${rand(8, 18)}s`);
+        particle.style.setProperty("--delay", `${rand(-18, 0)}s`);
+        particles.appendChild(particle);
+      }
+    }
+
+    // The hidden canvas is only used as a stencil to calculate where each emoji belongs.
+    // The visible message is made entirely from individual heart emoji elements.
+    function calculateTargets() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      let fontSize = clamp(width * .118, 44, 138);
+      const weight = 900;
+      const family = "Arial Black, Impact, Arial, sans-serif";
+      ctx.font = `${weight} ${fontSize}px ${family}`;
+
+      const maxTextWidth = width * .9;
+      const widestLine = Math.max(...TEXT_LINES.map((line) => ctx.measureText(line).width));
+      if (widestLine > maxTextWidth) {
+        fontSize *= maxTextWidth / widestLine;
+      }
+
+      const lineGap = fontSize * 1.12;
+      const centerY = height * .48;
+      ctx.font = `${weight} ${fontSize}px ${family}`;
+      ctx.shadowColor = "#fff";
+      ctx.shadowBlur = 6;
+      TEXT_LINES.forEach((line, index) => {
+        ctx.fillText(line, width / 2, centerY + (index - .5) * lineGap);
+      });
+
+      const image = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      const heartSize = clamp(fontSize * .145, 12, 23);
+      const step = heartSize * .82;
+      const points = [];
+
+      for (let y = height * .2; y < height * .75; y += step) {
+        for (let x = width * .04; x < width * .96; x += step) {
+          const px = Math.floor(x * dpr);
+          const py = Math.floor(y * dpr);
+          const alpha = image[(py * canvas.width + px) * 4 + 3];
+
+          if (alpha > 110) {
+            points.push({
+              x: x + rand(-step * .1, step * .1),
+              y: y + rand(-step * .1, step * .1),
+              r: rand(-8, 8),
+              s: rand(.88, 1.12),
+              o: 1
+            });
+          }
+        }
+      }
+
+      const maxHearts = width < 560 ? 720 : width < 1000 ? 1100 : 1650;
+      while (points.length > maxHearts) {
+        points.splice(Math.floor(Math.random() * points.length), 1);
+      }
+
+      return {
+        points,
+        heartSize
+      };
+    }
+
+    function rebuildHearts() {
+      const { points, heartSize } = calculateTargets();
+      targets = points;
+      field.innerHTML = "";
+      hearts = [];
+      randomA = [];
+      randomB = [];
+      document.documentElement.style.setProperty("--heart-size", `${heartSize}px`);
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      targets.forEach(() => {
+        const heart = document.createElement("span");
+        heart.className = "heart-dot";
+        heart.textContent = HEART;
+        field.appendChild(heart);
+        hearts.push(heart);
+        randomA.push(makeRandomPoint(width, height));
+        randomB.push(makeRandomPoint(width, height));
+      });
+
+      cycleStart = performance.now();
+      loading.classList.add("hide");
+    }
+
+    function mix(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function interpolatePoint(from, to, amount) {
+      return {
+        x: mix(from.x, to.x, amount),
+        y: mix(from.y, to.y, amount),
+        r: mix(from.r, to.r, amount),
+        s: mix(from.s, to.s, amount),
+        o: mix(from.o, to.o, amount)
+      };
+    }
+
+    function heartbeatScale(time) {
+      const beat = (time % 1450) / 1450;
+      const first = Math.exp(-Math.pow((beat - .16) / .055, 2)) * .13;
+      const second = Math.exp(-Math.pow((beat - .31) / .075, 2)) * .19;
+      return 1 + first + second;
+    }
+
+    function currentStage(elapsed, index) {
+      let t = elapsed % totalCycle;
+
+      if (t < phases.scatterA) {
+        return randomA[index];
+      }
+      t -= phases.scatterA;
+
+      if (t < phases.gather) {
+        return interpolatePoint(randomA[index], targets[index], easeInOutCubic(t / phases.gather));
+      }
+      t -= phases.gather;
+
+      if (t < phases.hold) {
+        const point = targets[index];
+        return { ...point, s: point.s * heartbeatScale(elapsed) };
+      }
+      t -= phases.hold;
+
+      if (t < phases.scatter) {
+        return interpolatePoint(targets[index], randomB[index], easeInOutCubic(t / phases.scatter));
+      }
+      t -= phases.scatter;
+
+      if (t < phases.reform) {
+        return interpolatePoint(randomB[index], targets[index], easeInOutCubic(t / phases.reform));
+      }
+
+      const point = targets[index];
+      return { ...point, s: point.s * heartbeatScale(elapsed) };
+    }
+
+    function animate(now) {
+      const elapsed = now - cycleStart;
+
+      hearts.forEach((heart, index) => {
+        const point = currentStage(elapsed, index);
+        const wave = Math.sin((elapsed * .002) + index * .31) * 1.6;
+        const glow = 1 + Math.sin((elapsed * .004) + index) * .16;
+        heart.style.opacity = point.o;
+        heart.style.transform = `translate3d(${point.x}px, ${point.y + wave}px, 0) translate(-50%, -50%) rotate(${point.r}deg) scale(${point.s})`;
+        heart.style.filter = `drop-shadow(0 0 ${4 * glow}px rgba(255, 72, 132, .95)) drop-shadow(0 0 ${14 * glow}px rgba(255, 26, 86, .68))`;
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        loading.classList.remove("hide");
+        rebuildHearts();
+        createBackgroundParticles();
+      }, 180);
+    });
+
+    createBackgroundParticles();
+    rebuildHearts();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
